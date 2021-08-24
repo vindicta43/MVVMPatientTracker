@@ -17,37 +17,39 @@ import com.alperen.mvvmpatienttracker.viewModel.PatientsViewModel
 
 class PatientsFragment : Fragment() {
     private lateinit var binding: FragmentPatientsBinding
-    private lateinit var patientsViewModel: PatientsViewModel
+    private lateinit var viewModel: PatientsViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         Log.e("TAG", "created patients")
 
-        binding = FragmentPatientsBinding.inflate(inflater, container, false)
-        patientsViewModel =
+        binding = FragmentPatientsBinding.inflate(inflater)
+        viewModel =
             ViewModelProvider(this, SavedStateViewModelFactory(activity?.application, this))
                 .get(PatientsViewModel::class.java)
 
         with(binding) {
             recyclerPatients.layoutManager = LinearLayoutManager(context)
 
-            patientsViewModel.getPatients().observe(viewLifecycleOwner) {
+            viewModel.getPatients().observe(viewLifecycleOwner) {
                 recyclerPatients.adapter = PatientsAdapter(it)
             }
 
             btnLogout.setOnClickListener {
-                val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.fragmentContainerView)
-                val navController = navHostFragment?.findNavController()
-                patientsViewModel.logout(navController)
+                viewModel.logout(it)
+            }
+
+            btnProfile.setOnClickListener {
+                findNavController().navigate(R.id.action_patientsFragment_to_profileFragment)
             }
             return root
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (::patientsViewModel.isInitialized)
-            patientsViewModel.saveState()
+        if (::viewModel.isInitialized)
+            viewModel.saveState()
         super.onSaveInstanceState(outState)
     }
 }

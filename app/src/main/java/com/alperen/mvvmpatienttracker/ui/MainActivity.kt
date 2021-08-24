@@ -2,7 +2,6 @@ package com.alperen.mvvmpatienttracker.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.fragment.NavHostFragment
 import com.alperen.mvvmpatienttracker.R
 
 class MainActivity : AppCompatActivity() {
